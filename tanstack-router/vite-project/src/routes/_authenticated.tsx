@@ -1,7 +1,6 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
-import { signOut } from "../hooks/useAuth";
 
-export const Route = createFileRoute("/page")({
+export const Route = createFileRoute("/_authenticated")({
   beforeLoad: ({ context }) => {
     const authenticated = context.authenticated;
     const isAuthenticated = authenticated?.isAuthenticated;
@@ -9,14 +8,4 @@ export const Route = createFileRoute("/page")({
       throw redirect({ to: "/login" });
     }
   },
-  component: Page,
 });
-
-function Page() {
-  return (
-    <>
-      <div>Hello "you get on /page"!</div>{" "}
-      <button onClick={signOut}>SignOut</button>
-    </>
-  );
-}

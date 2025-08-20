@@ -11,10 +11,16 @@
 import { createFileRoute } from '@tanstack/react-router'
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SearchRouteImport } from './routes/search'
 import { Route as PageRouteImport } from './routes/page'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as PokemonIndexRouteImport } from './routes/pokemon/index'
 import { Route as PokemonIdRouteImport } from './routes/pokemon/$id'
+import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
+import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as hiddenFolderFirstFileRouteImport } from './routes/(hidden-folder)/firstFile'
 
 const AboutLazyRouteImport = createFileRoute('/about')()
 
@@ -23,9 +29,23 @@ const AboutLazyRoute = AboutLazyRouteImport.update({
   path: '/about',
   getParentRoute: () => rootRouteImport,
 } as any).lazy(() => import('./routes/about.lazy').then((d) => d.Route))
+const SearchRoute = SearchRouteImport.update({
+  id: '/search',
+  path: '/search',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PageRoute = PageRouteImport.update({
   id: '/page',
   path: '/page',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedRoute = AuthenticatedRouteImport.update({
+  id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -43,41 +63,108 @@ const PokemonIdRoute = PokemonIdRouteImport.update({
   path: '/pokemon/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedSettingsRoute = AuthenticatedSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const hiddenFolderFirstFileRoute = hiddenFolderFirstFileRouteImport.update({
+  id: '/(hidden-folder)/firstFile',
+  path: '/firstFile',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/login': typeof LoginRoute
   '/page': typeof PageRoute
+  '/search': typeof SearchRoute
   '/about': typeof AboutLazyRoute
+  '/firstFile': typeof hiddenFolderFirstFileRoute
+  '/dashboard': typeof AuthenticatedDashboardRoute
+  '/settings': typeof AuthenticatedSettingsRoute
   '/pokemon/$id': typeof PokemonIdRoute
   '/pokemon': typeof PokemonIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/login': typeof LoginRoute
   '/page': typeof PageRoute
+  '/search': typeof SearchRoute
   '/about': typeof AboutLazyRoute
+  '/firstFile': typeof hiddenFolderFirstFileRoute
+  '/dashboard': typeof AuthenticatedDashboardRoute
+  '/settings': typeof AuthenticatedSettingsRoute
   '/pokemon/$id': typeof PokemonIdRoute
   '/pokemon': typeof PokemonIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteWithChildren
+  '/login': typeof LoginRoute
   '/page': typeof PageRoute
+  '/search': typeof SearchRoute
   '/about': typeof AboutLazyRoute
+  '/(hidden-folder)/firstFile': typeof hiddenFolderFirstFileRoute
+  '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/settings': typeof AuthenticatedSettingsRoute
   '/pokemon/$id': typeof PokemonIdRoute
   '/pokemon/': typeof PokemonIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/page' | '/about' | '/pokemon/$id' | '/pokemon'
+  fullPaths:
+    | '/'
+    | '/login'
+    | '/page'
+    | '/search'
+    | '/about'
+    | '/firstFile'
+    | '/dashboard'
+    | '/settings'
+    | '/pokemon/$id'
+    | '/pokemon'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/page' | '/about' | '/pokemon/$id' | '/pokemon'
-  id: '__root__' | '/' | '/page' | '/about' | '/pokemon/$id' | '/pokemon/'
+  to:
+    | '/'
+    | '/login'
+    | '/page'
+    | '/search'
+    | '/about'
+    | '/firstFile'
+    | '/dashboard'
+    | '/settings'
+    | '/pokemon/$id'
+    | '/pokemon'
+  id:
+    | '__root__'
+    | '/'
+    | '/_authenticated'
+    | '/login'
+    | '/page'
+    | '/search'
+    | '/about'
+    | '/(hidden-folder)/firstFile'
+    | '/_authenticated/dashboard'
+    | '/_authenticated/settings'
+    | '/pokemon/$id'
+    | '/pokemon/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
+  LoginRoute: typeof LoginRoute
   PageRoute: typeof PageRoute
+  SearchRoute: typeof SearchRoute
   AboutLazyRoute: typeof AboutLazyRoute
+  hiddenFolderFirstFileRoute: typeof hiddenFolderFirstFileRoute
   PokemonIdRoute: typeof PokemonIdRoute
   PokemonIndexRoute: typeof PokemonIndexRoute
 }
@@ -91,11 +178,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AboutLazyRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/search': {
+      id: '/search'
+      path: '/search'
+      fullPath: '/search'
+      preLoaderRoute: typeof SearchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/page': {
       id: '/page'
       path: '/page'
       fullPath: '/page'
       preLoaderRoute: typeof PageRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof AuthenticatedRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -119,13 +227,52 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PokemonIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/settings': {
+      id: '/_authenticated/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof AuthenticatedSettingsRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/dashboard': {
+      id: '/_authenticated/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof AuthenticatedDashboardRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/(hidden-folder)/firstFile': {
+      id: '/(hidden-folder)/firstFile'
+      path: '/firstFile'
+      fullPath: '/firstFile'
+      preLoaderRoute: typeof hiddenFolderFirstFileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
+interface AuthenticatedRouteChildren {
+  AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute
+}
+
+const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
+  AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedSettingsRoute: AuthenticatedSettingsRoute,
+}
+
+const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
+  AuthenticatedRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRoute: AuthenticatedRouteWithChildren,
+  LoginRoute: LoginRoute,
   PageRoute: PageRoute,
+  SearchRoute: SearchRoute,
   AboutLazyRoute: AboutLazyRoute,
+  hiddenFolderFirstFileRoute: hiddenFolderFirstFileRoute,
   PokemonIdRoute: PokemonIdRoute,
   PokemonIndexRoute: PokemonIndexRoute,
 }
